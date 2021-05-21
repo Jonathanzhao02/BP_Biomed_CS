@@ -1,125 +1,65 @@
-%% 1.18  ²âÊÔKSVDºÍJBHI¹ýÍê±¸×Öµä
-% ¶Ô±ÈKSVDºÍJBHI·½·¨µÄÎó²îºÍºÄÊ± 
-%19ÖÖÑ¹Ëõ±È £¬¶Ô100¶ÎECGÈ¡Æ½¾ùÖµ
-% ÖØ¹¹Ëã·¨¹Ì¶¨bp£¬²âÁ¿¾ØÕó¹Ì¶¨Ò»¸ö²®Å¬Àû¾ØÕó
-% JBHI·½·¨µÄQRS¼ì²â·½·¨¾­¹ý¸Ä½ø
+%% 1.18  ï¿½ï¿½ï¿½ï¿½KSVDï¿½ï¿½JBHIï¿½ï¿½ï¿½ê±¸ï¿½Öµï¿½
+% ï¿½Ô±ï¿½KSVDï¿½ï¿½JBHIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½Ê± 
+%19ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½100ï¿½ï¿½ECGÈ¡Æ½ï¿½ï¿½Öµ
+% ï¿½Ø¹ï¿½ï¿½ã·¨ï¿½Ì¶ï¿½bpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+% JBHIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½QRSï¿½ï¿½â·½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½ï¿½
 %%                                
-load D_S.mat    %»ù±¾×Öµä
-load D_NQp.mat  %²»º¬QRSµÄ×Ó×Öµä
-load D_Qp.mat      %ÂÛÎÄÊ¹ÓÃ×Ó×Öµä£¨12¸ö£©
+load data/D_S.mat    %ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½
+load data/D_NQp.mat  %ï¿½ï¿½ï¿½ï¿½QRSï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½
+load data/D_Qp.mat      %ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½Öµä£¨12ï¿½ï¿½ï¿½ï¿½
 N=192; 
+L=5;       %ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½
 q=12;
-% threshold=1.5;     %ÅÐ¶ÏQRSµÄãÐÖµ
-load('BernoulliSample.mat');   %µ¼ÈëÒ»¸ö¹Ì¶¨²âÁ¿¾ØÕó 1024*1024
+% threshold=1.5;     %ï¿½Ð¶ï¿½QRSï¿½ï¿½ï¿½ï¿½Öµ
+load('BernoulliSample.mat');   %ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1024*1024
 
-for num_CR=1:19          %19ÖÖCR
-    fprintf('>>Ñ¹Ëõ±È%d£¬¿ªÊ¼²âÊÔ\n',num_CR)
-    M=fix((1-num_CR*5*0.01)*N);             %¼ÆËãCR¶ÔÓ¦²âÁ¿Êý  CR´Ó95%¡¢90% ~ 5%£¬¶ÔÓ¦M=972¡¢921~51   
-    Phi=BernoulliSample(1:M,1:N);                %Ã¿ÖÖCR¶ÔÓ¦Ò»ÖÖ²âÁ¿ÊýM£¬¶ÔÓ¦Ò»ÖÖ²âÁ¿¾ØÕóM*N     
-      
-                  
-                  fprintf('>Ñ¹Ëõ±È%d£¬¿ªÊ¼²âÊÔ\n',num_CR)
-                  toc_sum=0;      %¼ÆÊ±Æ÷ºÍ¹éÁã
-                  PRDsum_KSVD=0;       %Îó²îºÍÇåÁã  £¨ÎªÁË¼ÆËãÒ»ÖÖËã·¨ÔÚÒ»ÖÖCRÏÂ  ¶Ô100¶ÎÐÄµçÏÂÎó²îµÄÆ½¾ùÖµ
-                  PRDsum_JBHI=0; 
-                  TIMEsum_KSVD=0;
-                  TIMEsum_JBHI=0;
-                  
-                   for num_ECG=1:100;   
-                            fprintf('loading ECG%d\n',num_ECG)
-                            ecgstr=['ecg',num2str(num_ECG)];                 
-                            x=cell2mat(struct2cell(load(ecgstr)));        %Ã¿´Îµ¼ÈëÒ»¸öecg  ´Óecg1~ecg100
-                            x_dic=x(1:960);
-                         
-                            %%   KSVD·½·¨
-                            L=5;       %ÐÅºÅÊýÁ¿
-                            A=reshape(x_dic,192,5);
-                            X=[ ];                      %ÖØ¹¹ºó ½«¸÷Ð¡¶ÎÁ¬½ÓµÄÒ»Î¬ÐÅºÅ 
-                            tic;
-                            for i=1:L
-                                x=A(:,i); 
-                                %Phi=BernoulliMtx( M,N );                                          
-                                y=Phi*x;                                                             
-                                Psi=D_S;
-                                T=Phi*Psi; 
-                                % hat_s=cs_irls(y,T,N);                     %µü´úÖØ¼ÓÈ¨
-                                hat_s=cs_bp(y,T,N);                         %»ù×·×Ù
-                                hat_x=real(Psi*hat_s);
-                                X=[X hat_x']; 
-                            end
-                            X_s=X';                                           %X_sÊÇÊ¹ÓÃ±ê×¼×ÖµäµÄÖØ¹¹ÐÅºÅ
-                            TIME_KSVD=toc;
-                            PRD_KSVD=norm(x_dic-X_s)/norm(x_dic)*100;     % ±ê×¼×ÖµäµÄÖØ¹¹Îó²î
+for num_CR=1:19          %19ï¿½ï¿½CR
+    fprintf('>>starting CR%d\n',num_CR)
+    M=fix((1-num_CR*5*0.01)*N);             %ï¿½ï¿½ï¿½ï¿½CRï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  CRï¿½ï¿½95%ï¿½ï¿½90% ~ 5%ï¿½ï¿½ï¿½ï¿½Ó¦M=972ï¿½ï¿½921~51   
+    Phi=BernoulliSample(1:M,1:N);                %Ã¿ï¿½ï¿½CRï¿½ï¿½Ó¦Ò»ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Mï¿½ï¿½ï¿½ï¿½Ó¦Ò»ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½M*N     
+    toc_sum=0;      %ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½
+    PRDsum_KSVD=0;       %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½Îªï¿½Ë¼ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ò»ï¿½ï¿½CRï¿½ï¿½  ï¿½ï¿½100ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµ
+    TIMEsum_KSVD=0;
+    
+    for num_ECG=1:10;   
+        fprintf('loading ECG%d\n',num_ECG)
+        ecgstr=['data/ecg',num2str(num_ECG),'.mat'];                 
+        x=cell2mat(struct2cell(load(ecgstr)));        %Ã¿ï¿½Îµï¿½ï¿½ï¿½Ò»ï¿½ï¿½ecg  ï¿½ï¿½ecg1~ecg100
+        x_dic=x(1:N*L);
+        
+        %%   KSVDï¿½ï¿½ï¿½ï¿½
+        A=reshape(x_dic,N,L);
+        X=[ ];                      %ï¿½Ø¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ò»Î¬ï¿½Åºï¿½ 
+        tic;
+        for i=1:L
+            x=A(:,i); 
+            %Phi=BernoulliMtx( M,N );                                          
+            y=Phi*x;                                                             
+            Psi=D_S;
+            T=Phi*Psi; 
+            % hat_s=cs_irls(y,T,N);                     %ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½È¨
+            hat_s=cs_bp(y,T,N);                         %ï¿½ï¿½×·ï¿½ï¿½
+            hat_x=real(Psi*hat_s);
+            X=[X hat_x']; 
+        end
+        X_s=X';                                           %X_sï¿½ï¿½Ê¹ï¿½Ã±ï¿½×¼ï¿½Öµï¿½ï¿½ï¿½Ø¹ï¿½ï¿½Åºï¿½
+        TIME_KSVD=toc;
+        PRD_KSVD=norm(x_dic-X_s)/norm(x_dic)*100;     % ï¿½ï¿½×¼ï¿½Öµï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½
+
+        PRDsum_KSVD=PRDsum_KSVD+PRD_KSVD;
+        TIMEsum_KSVD=TIMEsum_KSVD+TIME_KSVD;
                             
-                           %% JBHI·½·¨        
-region_n=12;            %×ÓÇøÓòÊýÁ¿
-region_l=N/region_n; %ÇøÓò¿í¶È           
-win_w=N/q;    %´°¿Ú¿í¶È
-Q=cell(1,q);             %Ôª°ûÊý×éq¸ö
-X_sub=[];
-num=5;
-tic;
-[R,V,R_no]=QRS_crest(x_dic); 
-R_num=length(R);
-for i=1:num
-%% ¶ÔÐÅºÅ½øÐÐQRSÇøÓòÅÐ¶¨
-    p_start=N*(i-1)+1;
-    p_end=N*i;
-    x=x_dic(p_start:p_end);
-    flag_qrs=0;
-        for ii=1:R_num
-            if R(ii)>=p_start&&R(ii)<=p_end
-                ww=ceil((R(ii)-p_start+1)/region_l);  %wÎª²¨·åËùÔÚ´°¿ÚÇøÓò Î»ÖÃÔÚ1~qÖÐµÄÒ»¸ö
-                dictionary=D_Qp{ww};   %Ê¹ÓÃº¬QRSµÄ×Öµä
-                flag_qrs=1;    
-            end     
-        end
-        
-        if  flag_qrs==0
-            dictionary=D_NQp;    %Ê¹ÓÃ²»º¬QRSµÄ×Öµä
-        end
-        
-% Phi=BernoulliMtx( M,N );                                          
-y=Phi*x;                                                             
-Psi=dictionary;
-T=Phi*Psi; 
-% hat_s=cs_irls(y,T,N);                     %µü´úÖØ¼ÓÈ¨
-hat_s=cs_bp(y,T,N);                         %»ù×·×Ù
-hat_x=real(Psi*hat_s);
-X_sub=[X_sub hat_x'];                   %·Ö¶ÎÐÅºÅÆ´½Ó
-end
-X_sub=X_sub';
-TIME_JBHI=toc;
-TIME_JBHI=TIME_JBHI+TIME_KSVD;
-PRD_JBHI=norm(x_dic-X_sub)/norm(x_dic)*100;  % ×Ó×ÖµäµÄÖØ¹¹Îó²î  
-%% Í³¼Æ×ÜÎó²îºÍ×ÜÊ±¼ä
-PRDsum_KSVD=PRDsum_KSVD+PRD_KSVD;
-PRDsum_JBHI=PRDsum_JBHI+PRD_JBHI;
-TIMEsum_KSVD=TIMEsum_KSVD+TIME_KSVD;
-TIMEsum_JBHI=TIMEsum_JBHI+TIME_JBHI;
 
-                    end           %  100¶ÎECG²âÊÔÍê³É
+
+    end           %  100ï¿½ï¿½ECGï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     
-                    PRDaver_KSVD=PRDsum_KSVD/num_ECG;
-                    PRDaver_JBHI=PRDsum_JBHI/num_ECG;             
-                    TIMEaver_KSVD=TIMEsum_KSVD/num_ECG;
-                    TIMEaver_JBHI= TIMEsum_JBHI/num_ECG;
-                    
-                    Sheet1(1,num_CR)=PRDaver_KSVD;     % KSVD Îó²î
-                    Sheet1(2,num_CR)=PRDaver_JBHI;      % JBHI  Îó²î
-                    Sheet2(1,num_CR)=TIMEaver_KSVD;     %KSVD ºÄÊ±     
-                    Sheet2(2,num_CR)=TIMEaver_JBHI;     %JBHI  ºÄÊ±
+    PRDaver_KSVD=PRDsum_KSVD/num_ECG;
+    TIMEaver_KSVD=TIMEsum_KSVD/num_ECG;
 
-                    fprintf('>Ñ¹Ëõ±È%d£¬Íê³É²âÊÔ \n',num_CR)
-                   
-          fprintf('>>Ñ¹Ëõ±È%d£¬Íê³ÉËùÓÐ²âÊÔ \n',num_CR)
-end          % 19ÖÖCR ±éÀú½áÊø
-fprintf('>>>Íê³ÉËùÓÐ²âÊÔ£¬Õý½«Êý¾Ý´æÈë±í¸ñ... \n')
+    fprintf('CR%d PRD: %f\n', num_CR, PRDaver_KSVD)   
+end          % 19ï¿½ï¿½CR ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-xlswrite('KSVD&JBHI_19CR_100ecg.xlsx',Sheet1,'Sheet1','B3');
-xlswrite('KSVD&JBHI_19CR_100ecg.xlsx',Sheet2,'Sheet2','B3');
-fprintf('>>>>>>>> ÒÑ±£´æÊý¾Ýµ½±í¸ñ<<<<<<<<\n')
-sprintf('>>All Completed<<\n')
+fprintf('>>All Completed<<\n')
 
 
 % figure(1);

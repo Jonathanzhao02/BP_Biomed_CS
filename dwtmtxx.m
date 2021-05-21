@@ -1,11 +1,11 @@
 function [ ww ] = dwtmtx( N,w,wlev )  
 %DWTMTX Discrete wavelet transform matrix  
-%   This function generates the transform matrix ww according to input   ´Ëº¯Êý¸ù¾ÝÊäÈëÉú³É±ä»»¾ØÕóWW
+%   This function generates the transform matrix ww according to input   ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É±ä»»ï¿½ï¿½ï¿½ï¿½WW
 %   parameters N,wtype,wlev .  
 %Detailed explanation goes here  
-%   N is the dimension of ww    wwµÄÎ¬¶È
-%   wtype is the wavelet type  Ð¡²¨ÀàÐÍ
-%   wlev is the number of decomposition level  ·Ö½âµÄ²ãÊý
+%   N is the dimension of ww    wwï¿½ï¿½Î¬ï¿½ï¿½
+%   wtype is the wavelet type  Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%   wlev is the number of decomposition level  ï¿½Ö½ï¿½Ä²ï¿½ï¿½ï¿½
 %NOTE: The extension mode must be Periodization('per')  
 
 
@@ -66,9 +66,9 @@ wav(52)={'rbio6.8'};
 
 wtype=wav{w};
 
-[h,g]= wfilters(wtype,'d');         %Decomposition low&high pass filter  ·Ö½âµÍÍ¨¸ßÍ¨ÂË²¨Æ÷
-L=length(h);                        %Filter length  ÂË²¨Æ÷³¤¶È
-h_1 = fliplr(h);                    %Flip matrix left to right  ´Ó×óµ½ÓÒ·­×ª¾ØÕó
+[h,g]= wfilters(wtype,'d');         %Decomposition low&high pass filter  ï¿½Ö½ï¿½ï¿½Í¨ï¿½ï¿½Í¨ï¿½Ë²ï¿½ï¿½ï¿½
+L=length(h);                        %Filter length  ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+h_1 = fliplr(h);                    %Flip matrix left to right  ï¿½ï¿½ï¿½ï¿½ï¿½Ò·ï¿½×ªï¿½ï¿½ï¿½ï¿½
 g_1 = fliplr(g);  
 loop_max = log2(N);  
 loop_min = double(int8(log2(L)))+1;  

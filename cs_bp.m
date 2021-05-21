@@ -1,8 +1,8 @@
 
 %************************************************************************%
 function hat_x=cs_bp(y,T_Mat,m)
-% Reference: E. Candes and J. Romberg, ¡°l1-Magic: Recovery of Sparse
-% Signals via Convex Programming,¡± 2005.
+% Reference: E. Candes and J. Romberg, ï¿½ï¿½l1-Magic: Recovery of Sparse
+% Signals via Convex Programming,ï¿½ï¿½ 2005.
 
 % y=T_Mat*x, T_Mat is n-by-m
 % y - measurements
